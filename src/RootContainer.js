@@ -31,43 +31,43 @@ export default function RootContainer({ serviceUrl, entity, config }) {
     
     // query LinkageGroup markers
     useEffect(() => {
+        const markers = [];
         queryMarkers(linkageGroupId, serviceUrl)
             .then(response => {
-                const markers = [];
                 response.forEach(result => {
                     markers.push(result);
                 });
                 setMarkers(markers);
             })
             .catch(() => {
-                setError("Markers not found for linkage group id="+linkageGroupId);
+                setError("Markers not found on this linkage group.");
             });
     }, []);
 
     // query LinkageGroup QTLs
     useEffect(() => {
+        const qtls = [];
         queryQTLs(linkageGroupId, serviceUrl)
             .then(response => {
-                const qtls = [];
                 response.forEach(result => {
                     result.qtls.forEach(qtl => {
                         qtls.push(qtl);
                     });
                 });
-                setQtls(qtls);
             })
             .catch(() => {
-                setError("QTLs not found for linkage group id="+linkageGroupId);
+                // do nothing - some linkage groups don't have QTLs
             });
+        setQtls(qtls);
     }, []);
 
     // build the CanvasXpress data (there may be no QTLs)
     useEffect(() => {
         setData(getData(linkageGroup, markers, qtls));
-    }, [linkageGroup, markers, qtls]);
+    }, [markers, qtls]);
     
     if (error) return (
-            <div className="rootContainer error">{ error }</div>
+        <div className="rootContainer error">{ error }</div>
     );
 
     // (mostly) static canvasXpress config
@@ -88,7 +88,7 @@ export default function RootContainer({ serviceUrl, entity, config }) {
     }
 
     if (linkageGroup) {
-        conf["setMaxX"] = linkageGroup.length;
+        conf["setMaxX"] = Number(linkageGroup.length) + 5;
     }
 
     // QTL click opens a new QTL report page
@@ -96,10 +96,12 @@ export default function RootContainer({ serviceUrl, entity, config }) {
     // QTL page:             http://domain.org/beanmine/report/QTL/7900003
     var evts = {
         "click": function(o, e, t) {
-            const qtlId = o[0].data[0].key;
-            if (qtlId) {
-                const uriParts = window.location.href.split("LinkageGroup");
-                window.open(uriParts[0]+"QTL/"+qtlId);
+            if (o) {
+                const qtlId = o[0].data[0].key;
+                if (qtlId) {
+                    const uriParts = window.location.href.split("LinkageGroup");
+                    window.open(uriParts[0]+"QTL/"+qtlId);
+                }
             }
         }
     }
@@ -110,7 +112,9 @@ export default function RootContainer({ serviceUrl, entity, config }) {
              ?
              <div className="rootContainer">
                  <CanvasXpressReact target={"canvas"} data={data} config={conf} height={500} width={1150} events={evts} />
-                 <div className="instructions">Click QTL to see its page.</div>
+                 {qtls && qtls.length>0 && (
+                     <div className="instructions">Click QTL to see its page.</div>
+                 )}
              </div>
              :
              <Loader />
