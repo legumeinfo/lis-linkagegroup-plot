@@ -1,0 +1,13 @@
+{
+  "accepts": ["id"],
+  "classes": ["LinkageGroup"],
+  "files" : {
+    "css" : "dist/style.css",
+    "js" : "dist/bundle.js"
+  },
+  "toolName" : {
+    "human" :"LIS Linkage Group Plot",
+    "cljs" :"lisLinkageGroupPlot"    
+  },
+  "version": 2
+}
