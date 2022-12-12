@@ -12,8 +12,8 @@
     <script src="node_modules/imjs/dist/im.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react@16/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"></script>
 
     <!-- These are styles that will be inherited from bluegenes -->
     <!-- <link rel="stylesheet" href="css/site.css"> -->
@@ -36,7 +36,7 @@
           var elem = document.getElementById('visualizer');
           // InterMine service, including URL and token.
     	  var imURL = {
-    	      root: 'https://mines.legumeinfo.org/phaseolusmine'
+    	      root: 'https://dev.lis.ncgr.org/phaseolusmine'
     	      //could include token here too if we had one
     	  };
     	  // this is an example of data that could be passed to this tool be BlueGenes
@@ -46,10 +46,10 @@
 	      LinkageGroup: {
 	          class: 'LinkageGroup',
 	          format: 'id',
-                  value: 91000005 // markers and QTLs
-	          // value: 89000008 // no QTLs
+                  value: 93000009 // markers and 11 QTLs
+		  // value: 89000008 // no QTLs
                   // value: 93000006 // no markers or QTLs
-                  // value: 97000005    // very long LG
+                  // value: 97000005 // very long LG
               }
           };
     	  var toolState = {}; //to be confirmed how we use this.

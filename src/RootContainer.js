@@ -10,6 +10,7 @@ import getData from "./getData";
 
 export default function RootContainer({ serviceUrl, entity, config }) {
     const linkageGroupId = entity.value;
+
     const [error, setError] = useState(null);
     const [linkageGroup, setLinkageGroup] = useState(null);
     const [markers, setMarkers] = useState(null);
@@ -18,6 +19,7 @@ export default function RootContainer({ serviceUrl, entity, config }) {
     
     // query LinkageGroup and GeneticMap attributes
     useEffect(() => {
+        // LinkageGroup
         queryLinkageGroup(linkageGroupId, serviceUrl)
             .then(response => {
                 response.forEach(result => {
@@ -27,10 +29,7 @@ export default function RootContainer({ serviceUrl, entity, config }) {
             .catch(() => {
                 setError("LinkageGroup data not found for id="+linkageGroupId);
             });
-    }, []);
-    
-    // query LinkageGroup markers
-    useEffect(() => {
+        // markers
         const markers = [];
         queryMarkers(linkageGroupId, serviceUrl)
             .then(response => {
@@ -42,29 +41,24 @@ export default function RootContainer({ serviceUrl, entity, config }) {
             .catch(() => {
                 setError("Markers not found on this linkage group.");
             });
-    }, []);
-
-    // query LinkageGroup QTLs
-    useEffect(() => {
+        // QTLs
         const qtls = [];
         queryQTLs(linkageGroupId, serviceUrl)
             .then(response => {
                 response.forEach(result => {
-                    result.qtls.forEach(qtl => {
-                        qtls.push(qtl);
-                    });
+                    qtls.push(result);
                 });
+                setQtls(qtls);
             })
             .catch(() => {
                 // do nothing - some linkage groups don't have QTLs
             });
-        setQtls(qtls);
     }, []);
-
+    
     // build the CanvasXpress data (there may be no QTLs)
     useEffect(() => {
         setData(getData(linkageGroup, markers, qtls));
-    }, [markers, qtls]);
+    }, [linkageGroup, markers, qtls]);
     
     if (error) return (
         <div className="rootContainer error">{ error }</div>
@@ -107,18 +101,16 @@ export default function RootContainer({ serviceUrl, entity, config }) {
     }
     
     return (
-        <div>
-            {data
-             ?
-             <div className="rootContainer">
-                 <CanvasXpressReact target={"canvas"} data={data} config={conf} height={500} width={1150} events={evts} />
-                 {qtls && qtls.length>0 && (
-                     <div className="instructions">Click QTL to see its page.</div>
-                 )}
-             </div>
-             :
-             <Loader />
-            }
+        <div className="rootContainer">
+            {data && (
+                <CanvasXpressReact target={"canvas"} data={data} config={conf} height={500} width={1150} events={evts} />
+            )}
+            {qtls && (
+                <div className="instructions">Click QTL to see its page.</div>
+            )}
+            {!data && (
+                <Loader />
+            )}
         </div>
     );
 

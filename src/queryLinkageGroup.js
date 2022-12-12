@@ -23,9 +23,7 @@ const pathQuery = ({ linkageGroupId }) => ({
     from: 'LinkageGroup',
     select: [
         'identifier',
-        'length',
-        'geneticMap.primaryIdentifier',
-        'geneticMap.synopsis'
+        'length'
     ],
     where: [
 	{

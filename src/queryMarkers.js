@@ -23,8 +23,7 @@ const pathQuery = ({ linkageGroupId }) => ({
     from: 'LinkageGroupPosition',
     select: [
         'markerName',
-        'position',
-        'linkageGroup.id'
+        'position'
     ],
     orderBy: [
         {

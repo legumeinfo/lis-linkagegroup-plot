@@ -20,21 +20,21 @@ export default function queryQTLs(linkageGroupId, serviceUrl, imjsClient = imjs)
 }
 
 const pathQuery = ({ linkageGroupId }) => ({
-    from: 'LinkageGroup',
+    from: 'QTL',
     select: [
-        'qtls.identifier',
-        'qtls.start',
-        'qtls.end'
+        'identifier',
+        'start',
+        'end'
     ],
     orderBy: [
         {
-            path: 'qtls.start',
+            path: 'start',
             direction: 'ASC'
         }
     ],
     where: [
 	{
-	    path: 'id',
+	    path: 'linkageGroup.id',
 	    op: '=',
 	    value: linkageGroupId
 	}
