@@ -17,9 +17,8 @@ export default function RootContainer({ serviceUrl, entity, config }) {
     const [qtls, setQtls] = useState(null);
     const [data, setData] = useState(null);
     
-    // query LinkageGroup and GeneticMap attributes
     useEffect(() => {
-        // LinkageGroup
+        // linkage group
         queryLinkageGroup(linkageGroupId, serviceUrl)
             .then(response => {
                 response.forEach(result => {
